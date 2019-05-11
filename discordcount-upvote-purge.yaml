@@ -1,0 +1,23 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: upvote-purge-cronjob
+spec:
+  schedule: "0 0 * * MON"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: upvote-purge
+            image: registry.jakegealer.me/upvote_purge
+            env:
+            - name: GET_HOSTS_FROM
+              value: dns
+            - name: RETHINKDB_HOSTNAME
+              value: rethinkdb-rethinkdb-cluster
+            - name: RETHINKDB_PASSWORD
+              value: rethinkdb
+          imagePullSecrets:
+            - name: private-registry
+          restartPolicy: OnFailure

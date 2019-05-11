@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: server-counter
+spec:
+  selector:
+    matchLabels:
+      run: server-counter
+  template:
+    metadata:
+      labels:
+        run: server-counter
+    spec:
+      containers:
+      - name: server-counter
+        image: registry.jakegealer.me/server_counter
+        imagePullPolicy: "Always"
+        env:
+        - name: GET_HOSTS_FROM
+          value: dns
+        - name: RETHINKDB_HOSTNAME
+          value: rethinkdb-rethinkdb-cluster
+        - name: RETHINKDB_PASSWORD
+          value: rethinkdb
+        - name: HOSTNAME
+          value: discordcount.me
+        - name: DISCORD_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: discordcount
+              key: token
+      imagePullSecrets:
+      - name: private-registry
