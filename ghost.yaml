@@ -1,0 +1,99 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: blog-jakegealer-me
+  labels:
+    app: blog-jakegealer-me
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: blog-jakegealer-me
+  template:
+    metadata:
+      labels:
+        app: blog-jakegealer-me
+        run: blog-jakegealer-me
+    spec:
+      containers:
+      - name: blog-jakegealer-me
+        image: ghost:2.6-alpine
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 2368
+        env:
+        - name: url
+          value: http://blog.jakegealer.me
+        volumeMounts:
+        - mountPath: /var/lib/ghost/content
+          name: content
+      volumes:
+      - name: content
+        persistentVolumeClaim:
+          claimName: blog-jg-content
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: blog-jakegealer-me
+  labels:
+    run: blog-jakegealer-me
+spec:
+  ports:
+  - port: 2368
+    protocol: TCP
+  selector:
+    run: blog-jakegealer-me
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: blog-jg-content
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
+  storageClassName: do-block-storage
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: blog-jakegealer-me-ingress
+  annotations:
+    ingress.kubernetes.io/ssl-redirect: "true"
+    kubernetes.io/tls-acme: "true"
+    certmanager.k8s.io/issuer: letsencrypt-prod
+    kubernetes.io/ingress.class: "nginx"
+spec:
+  tls:
+  - hosts:
+    - blog.jakegealer.me
+    secretName: blog-jakegealer-me-prod-letsencrypt
+  rules:
+  - host: blog.jakegealer.me
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: blog-jakegealer-me
+          servicePort: 2368
+---
+apiVersion: certmanager.k8s.io/v1alpha1
+kind: Certificate
+metadata:
+  name: blog-jakegealer-me-prod-letsencrypt
+spec:
+  secretName: blog-jakegealer-me-prod-letsencrypt
+  dnsNames:
+  - blog.jakegealer.me
+  acme:
+    config:
+    - http01:
+        ingressClass: nginx
+      domains:
+      - blog.jakegealer.me
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer
