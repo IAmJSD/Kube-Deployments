@@ -1,0 +1,42 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: rethinkdb-ingress
+  annotations:
+    ingress.kubernetes.io/ssl-redirect: "true"
+    kubernetes.io/tls-acme: "true"
+    certmanager.k8s.io/issuer: letsencrypt-prod
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/auth-type: basic
+    nginx.ingress.kubernetes.io/auth-secret: rethinkdb-access
+spec:
+  tls:
+  - hosts:
+    - rethinkdb.jakegealer.me
+    secretName: rethinkdb-prod-letsencrypt
+  rules:
+  - host: rethinkdb.jakegealer.me
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: rethinkdb-rethinkdb-admin
+          servicePort: 8080
+---
+apiVersion: certmanager.k8s.io/v1alpha1
+kind: Certificate
+metadata:
+  name: rethinkdb-prod-letsencrypt
+spec:
+  secretName: rethinkdb-prod-letsencrypt
+  dnsNames:
+  - rethinkdb.jakegealer.me
+  acme:
+    config:
+    - http01:
+        ingressClass: nginx
+      domains:
+      - rethinkdb.jakegealer.me
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer
