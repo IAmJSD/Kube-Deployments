@@ -1,0 +1,43 @@
+
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: message-ai
+spec:
+  replicas: 2
+  serviceName: message-ai
+  selector:
+    matchLabels:
+      run: message-ai
+  template:
+    metadata:
+      labels:
+        run: message-ai
+    spec:
+      containers:
+      - name: message-ai
+        image: jakemakesstuff/message-ai
+        imagePullPolicy: "Always"
+        ports:
+        - containerPort: 8000
+        readinessProbe:
+          httpGet:
+            port: 8000
+            path: /
+          initialDelaySeconds: 3
+          periodSeconds: 3
+        livenessProbe:
+          httpGet:
+            port: 8000
+            path: /
+          initialDelaySeconds: 3
+          periodSeconds: 3
+        env:
+        - name: GET_HOSTS_FROM
+          value: dns
+        - name: RETHINK_HOST
+          value: rethinkdb-rethinkdb-cluster
+        - name: RETHINK_PASSWORD
+          value: rethinkdb
+      imagePullSecrets:
+      - name: docker-hub

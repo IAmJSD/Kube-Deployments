@@ -1,0 +1,17 @@
+apiVersion: certmanager.k8s.io/v1alpha1
+kind: Certificate
+metadata:
+  name: ai-prod-letsencrypt
+spec:
+  secretName: ai-prod-letsencrypt
+  dnsNames:
+  - ai.jakegealer.me
+  acme:
+    config:
+    - http01:
+        ingressClass: nginx
+      domains:
+      - ai.jakegealer.me
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer
