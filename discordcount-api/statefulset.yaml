@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: discordcount-api
+spec:
+  replicas: 2
+  serviceName: "discordcount-api"
+  selector:
+    matchLabels:
+      run: discordcount-api
+  template:
+    metadata:
+      labels:
+        run: discordcount-api
+    spec:
+      containers:
+      - name: discordcount-api
+        image: registry.jakegealer.me/discordcount_api
+        imagePullPolicy: "Always"
+        ports:
+        - containerPort: 8000
+        readinessProbe:
+          httpGet:
+            port: 8000
+            path: /
+          initialDelaySeconds: 3
+          periodSeconds: 3
+        livenessProbe:
+          httpGet:
+            port: 8000
+            path: /
+          initialDelaySeconds: 3
+          periodSeconds: 3
+        env:
+        - name: GET_HOSTS_FROM
+          value: dns
+        - name: RETHINKDB_HOSTNAME
+          value: rethinkdb-rethinkdb-cluster
+        - name: RETHINKDB_PASSWORD
+          value: rethinkdb
+      imagePullSecrets:
+      - name: private-registry
