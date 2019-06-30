@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: jakegealer-me
+spec:
+  replicas: 2
+  serviceName: jakegealer-me
+  selector:
+    matchLabels:
+      run: jakegealer-me
+  template:
+    metadata:
+      labels:
+        run: jakegealer-me
+    spec:
+      containers:
+      - name: jakegealer-me
+        image: registry.jakegealer.me/jakegealer-me
+        imagePullPolicy: "Always"
+        ports:
+        - containerPort: 80
+        readinessProbe:
+          httpGet:
+            port: 80
+            path: /
+          initialDelaySeconds: 3
+          periodSeconds: 3
+        livenessProbe:
+          httpGet:
+            port: 80
+            path: /
+          initialDelaySeconds: 3
+          periodSeconds: 3
+      imagePullSecrets:
+      - name: private-registry

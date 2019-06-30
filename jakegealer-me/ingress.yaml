@@ -1,0 +1,22 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: jakegealer-me-ingress
+  annotations:
+    ingress.kubernetes.io/ssl-redirect: "true"
+    kubernetes.io/tls-acme: "true"
+    certmanager.k8s.io/issuer: letsencrypt-prod
+    kubernetes.io/ingress.class: "nginx"
+spec:
+  tls:
+    - hosts:
+        - jakegealer.me
+      secretName: jg-root-prod-letsencrypt
+  rules:
+    - host: jakegealer.me
+      http:
+        paths:
+          - path: /
+            backend:
+              serviceName: jakegealer-me
+              servicePort: 80
