@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: s-magiccap
+spec:
+  replicas: 2
+  serviceName: s-magiccap
+  selector:
+    matchLabels:
+      run: s-magiccap
+  template:
+    metadata:
+      labels:
+        run: s-magiccap
+    spec:
+      containers:
+      - name: s-magiccap
+        image: registry.jakegealer.me/s-magiccap
+        imagePullPolicy: "Always"
+        ports:
+        - containerPort: 8000
+        readinessProbe:
+          httpGet:
+            port: 8000
+            path: /
+          initialDelaySeconds: 3
+          periodSeconds: 3
+        livenessProbe:
+          httpGet:
+            port: 8000
+            path: /
+          initialDelaySeconds: 3
+          periodSeconds: 3
+        env:
+        - name: GET_HOSTS_FROM
+          value: dns
+        - name: RETHINKDB_HOSTNAME
+          value: rethinkdb-rethinkdb-cluster
+        - name: RETHINKDB_PASSWORD
+          value: rethinkdb
+      imagePullSecrets:
+      - name: private-registry

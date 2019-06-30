@@ -1,0 +1,17 @@
+apiVersion: certmanager.k8s.io/v1alpha1
+kind: Certificate
+metadata:
+  name: s-magiccap-prod-letsencrypt
+spec:
+  secretName: s-magiccap-prod-letsencrypt
+  dnsNames:
+  - s.magiccap.me
+  acme:
+    config:
+    - http01:
+        ingressClass: nginx
+      domains:
+      - s.magiccap.me
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer
