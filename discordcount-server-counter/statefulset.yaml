@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: server-counter
-        image: registry.jakegealer.me/server_counter
+        image: registry.gitlab.com/discordcount/server_counter
         imagePullPolicy: "Always"
         readinessProbe:
           exec:
@@ -46,4 +46,4 @@ spec:
               apiVersion: v1
               fieldPath: metadata.name
       imagePullSecrets:
-      - name: private-registry
+      - name: gitlab
