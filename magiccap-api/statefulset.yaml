@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: magiccap-api
+spec:
+  replicas: 2
+  serviceName: magiccap-api
+  selector:
+    matchLabels:
+      run: magiccap-api
+  template:
+    metadata:
+      labels:
+        run: magiccap-api
+    spec:
+      containers:
+      - name: magiccap-api
+        image: registry.jakegealer.me/magiccap-api
+        imagePullPolicy: "Always"
+        ports:
+        - containerPort: 8000
+        readinessProbe:
+          httpGet:
+            port: 8000
+            path: /version/latest
+          initialDelaySeconds: 3
+          periodSeconds: 3
+        livenessProbe:
+          httpGet:
+            port: 8000
+            path: /version/latest
+          initialDelaySeconds: 10
+          periodSeconds: 10
+        env:
+        - name: GET_HOSTS_FROM
+          value: dns
+        - name: RETHINKDB_HOSTNAME
+          value: rethinkdb-rethinkdb-cluster
+        - name: RETHINKDB_PASSWORD
+          value: rethinkdb
+        - name: SENTRY_DSN
+          valueFrom:
+            secretKeyRef:
+              name: magiccap-api-v2
+              key: sentry
+      imagePullSecrets:
+      - name: private-registry
