@@ -1,0 +1,61 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: i-magiccap
+spec:
+  replicas: 2
+  serviceName: i-magiccap
+  selector:
+    matchLabels:
+      run: i-magiccap
+  template:
+    metadata:
+      labels:
+        run: i-magiccap
+    spec:
+      containers:
+      - name: i-magiccap
+        image: registry.jakegealer.me/i-magiccap
+        imagePullPolicy: "Always"
+        ports:
+        - containerPort: 8000
+        readinessProbe:
+          httpGet:
+            port: 8000
+            path: /
+          initialDelaySeconds: 3
+          periodSeconds: 3
+        livenessProbe:
+          httpGet:
+            port: 8000
+            path: /
+          initialDelaySeconds: 3
+          periodSeconds: 3
+        env:
+        - name: GET_HOSTS_FROM
+          value: dns
+        - name: RETHINKDB_HOSTNAME
+          value: rethinkdb-rethinkdb-cluster
+        - name: RETHINKDB_PASSWORD
+          value: rethinkdb
+        - name: SENTRY_DSN
+          valueFrom:
+            secretKeyRef:
+              name: i-magiccap-v2
+              key: sentry
+        - name: AWS_ENDPOINT
+          value: https://sfo2.digitaloceanspaces.com
+        - name: AWS_SECRET_ACCESS_KEY
+          valueFrom:
+            secretKeyRef:
+              name: i-magiccap-v2
+              key: secret_key
+        - name: AWS_ACCESS_KEY_ID
+          valueFrom:
+            secretKeyRef:
+              name: i-magiccap-v2
+              key: key_id
+        - name: AWS_BUCKET
+          value: i-magiccap
+      imagePullSecrets:
+      - name: private-registry

@@ -1,0 +1,22 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: i-magiccap-ingress
+  annotations:
+    ingress.kubernetes.io/ssl-redirect: "true"
+    kubernetes.io/tls-acme: "true"
+    certmanager.k8s.io/issuer: letsencrypt-prod
+    kubernetes.io/ingress.class: "nginx"
+spec:
+  tls:
+  - hosts:
+    - i.magiccap.me
+    secretName: i-magiccap-prod-letsencrypt
+  rules:
+  - host: i.magiccap.me
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: i-magiccap
+          servicePort: 8000

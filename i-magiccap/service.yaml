@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: i-magiccap
+  labels:
+    run: i-magiccap
+spec:
+  ports:
+  - port: 8000
+    protocol: TCP
+  selector:
+    run: i-magiccap
