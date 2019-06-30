@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: discordcount-api
-        image: registry.jakegealer.me/discordcount_api
+        image: registry.gitlab.com/discordcount/api
         imagePullPolicy: "Always"
         ports:
         - containerPort: 8000
@@ -39,4 +39,4 @@ spec:
         - name: RETHINKDB_PASSWORD
           value: rethinkdb
       imagePullSecrets:
-      - name: private-registry
+      - name: gitlab
