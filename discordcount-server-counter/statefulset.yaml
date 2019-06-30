@@ -1,8 +1,10 @@
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: server-counter
 spec:
+  replicas: 1
+  serviceName: "discordcount-server-counter"
   selector:
     matchLabels:
       run: server-counter
@@ -15,6 +17,13 @@ spec:
       - name: server-counter
         image: registry.jakegealer.me/server_counter
         imagePullPolicy: "Always"
+        readinessProbe:
+          exec:
+            command:
+            - cat
+            - /tmp/alive
+          initialDelaySeconds: 5
+          periodSeconds: 5
         env:
         - name: GET_HOSTS_FROM
           value: dns
@@ -29,5 +38,12 @@ spec:
             secretKeyRef:
               name: discordcount
               key: token
+        - name: SHARD_COUNT
+          value: "1"
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: metadata.name
       imagePullSecrets:
       - name: private-registry
