@@ -10,7 +10,7 @@ spec:
         spec:
           containers:
           - name: upvote-purge
-            image: registry.jakegealer.me/upvote_purge
+            image: registry.gitlab.com/discordcount/upvote_purge
             env:
             - name: GET_HOSTS_FROM
               value: dns
@@ -19,5 +19,5 @@ spec:
             - name: RETHINKDB_PASSWORD
               value: rethinkdb
           imagePullSecrets:
-            - name: private-registry
+            - name: gitlab
           restartPolicy: OnFailure
