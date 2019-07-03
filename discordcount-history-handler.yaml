@@ -18,6 +18,8 @@ spec:
               value: rethinkdb-rethinkdb-cluster
             - name: RETHINKDB_PASSWORD
               value: rethinkdb
+            - name: REDIS_HOST
+              value: redis://discordcount-history-guild-cache
           imagePullSecrets:
             - name: gitlab
           restartPolicy: OnFailure

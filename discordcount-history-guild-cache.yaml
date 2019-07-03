@@ -1,0 +1,36 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: discordcount-history-guild-cache
+  labels:
+    app: discordcount-history-guild-cache
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: discordcount-history-guild-cache
+  template:
+    metadata:
+      labels:
+        app: discordcount-history-guild-cache
+        run: discordcount-history-guild-cache
+    spec:
+      containers:
+      - name: discordcount-history-guild-cache
+        image: redis:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 6379
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: discordcount-history-guild-cache
+  labels:
+    run: discordcount-history-guild-cache
+spec:
+  ports:
+  - port: 6379
+    protocol: TCP
+  selector:
+    run: discordcount-history-guild-cache
