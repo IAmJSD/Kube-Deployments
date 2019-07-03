@@ -1,0 +1,23 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: history-handler-cronjob
+spec:
+  schedule: "55 23 * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: history-handler
+            image: registry.gitlab.com/discordcount/history_handler
+            env:
+            - name: GET_HOSTS_FROM
+              value: dns
+            - name: RETHINKDB_HOSTNAME
+              value: rethinkdb-rethinkdb-cluster
+            - name: RETHINKDB_PASSWORD
+              value: rethinkdb
+          imagePullSecrets:
+            - name: gitlab
+          restartPolicy: OnFailure
