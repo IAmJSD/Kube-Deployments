@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: i-magiccap
-        image: registry.jakegealer.me/i-magiccap
+        image: registry.gitlab.com/jakemakesstuff/i-magiccap-v2
         imagePullPolicy: "Always"
         ports:
         - containerPort: 8000
@@ -58,4 +58,4 @@ spec:
         - name: AWS_BUCKET
           value: i-magiccap
       imagePullSecrets:
-      - name: private-registry
+      - name: gitlab

@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: jakegealer-me
-        image: registry.jakegealer.me/jakegealer-me
+        image: registry.gitlab.com/jakemakesstuff/jakegealer-me
         imagePullPolicy: "Always"
         ports:
         - containerPort: 80
@@ -32,4 +32,4 @@ spec:
           initialDelaySeconds: 3
           periodSeconds: 3
       imagePullSecrets:
-      - name: private-registry
+      - name: gitlab

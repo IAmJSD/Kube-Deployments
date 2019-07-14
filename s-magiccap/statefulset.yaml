@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: s-magiccap
-        image: registry.jakegealer.me/s-magiccap
+        image: registry.gitlab.com/jakemakesstuff/s-magiccap-v2
         imagePullPolicy: "Always"
         ports:
         - containerPort: 8000
@@ -39,4 +39,4 @@ spec:
         - name: RETHINKDB_PASSWORD
           value: rethinkdb
       imagePullSecrets:
-      - name: private-registry
+      - name: gitlab

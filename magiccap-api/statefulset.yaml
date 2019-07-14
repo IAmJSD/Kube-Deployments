@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: magiccap-api
-        image: registry.jakegealer.me/magiccap-api
+        image: registry.gitlab.com/jakemakesstuff/magiccap-api-v2
         imagePullPolicy: "Always"
         ports:
         - containerPort: 8000
@@ -44,4 +44,4 @@ spec:
               name: magiccap-api-v2
               key: sentry
       imagePullSecrets:
-      - name: private-registry
+      - name: gitlab
