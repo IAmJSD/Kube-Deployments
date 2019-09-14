@@ -31,6 +31,13 @@ spec:
             path: /version/latest
           initialDelaySeconds: 10
           periodSeconds: 10
+        resources:
+          requests:
+            memory: "25Mi"
+            cpu: "0.1"
+          limits:
+            memory: "300Mi"
+            cpu: "0.3"
         env:
         - name: GET_HOSTS_FROM
           value: dns

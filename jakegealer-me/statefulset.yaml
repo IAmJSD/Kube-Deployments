@@ -31,5 +31,12 @@ spec:
             path: /
           initialDelaySeconds: 3
           periodSeconds: 3
+        resources:
+          requests:
+            memory: "25Mi"
+            cpu: "0.1"
+          limits:
+            memory: "128Mi"
+            cpu: "0.1"
       imagePullSecrets:
       - name: gitlab
