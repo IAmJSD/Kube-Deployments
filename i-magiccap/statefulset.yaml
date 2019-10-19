@@ -19,18 +19,6 @@ spec:
         imagePullPolicy: "Always"
         ports:
         - containerPort: 8000
-        readinessProbe:
-          httpGet:
-            port: 8000
-            path: /healthcheck
-          initialDelaySeconds: 3
-          periodSeconds: 3
-        livenessProbe:
-          httpGet:
-            port: 8000
-            path: /healthcheck
-          initialDelaySeconds: 3
-          periodSeconds: 3
         resources:
           requests:
             memory: "50Mi"
